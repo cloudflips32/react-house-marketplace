@@ -6,6 +6,7 @@ import {db} from '../config/firebase.config'
 import { setDoc, doc, serverTimestamp} from 'firebase/firestore'
 import ArrowRightIcon from '../assets/svg/keyboardArrowRightIcon.svg?react' 
 import VisibilityIcon from '../assets/svg/visibilityIcon.svg' 
+import chalk from "chalk"
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -49,6 +50,7 @@ const SignUp = () => {
 
       navigate('/')
     } catch (error) {
+      console.log(chalk.red(error))
       toast.error('Error with Registration')
     }
   }

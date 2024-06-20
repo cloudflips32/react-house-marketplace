@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import ArrowRightIcon from '../assets/svg/keyboardArrowRightIcon.svg?react' 
 import VisibilityIcon from '../assets/svg/visibilityIcon.svg' 
+import chalk from "chalk"
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -34,6 +35,7 @@ const SignIn = () => {
       navigate('/')
       }
     } catch (error) {
+      console.log(chalk.red(error))
       toast.error('Bad User Credentials')
     }
   }
