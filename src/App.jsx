@@ -9,12 +9,10 @@ import Profile from './pages/Profile'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import PrivateRoute from './components/PrivateRoute'
-
 /**
  * The main application component.
- * @returns {JSX.Element} The rendered application.
+ * @returns {JSX.Element} - The JSX element to render the application.
  */
-
 function App() {
 
   return (
