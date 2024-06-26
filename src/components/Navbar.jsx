@@ -3,9 +3,22 @@ import OfferIcon from '../assets/svg/localOfferIcon.svg?react'
 import ExploreIcon from '../assets/svg/exploreIcon.svg?react'
 import PersonOutlineIcon from '../assets/svg/personOutlineIcon.svg?react'
 
+/**
+ * A functional component that renders a navigation bar.
+ * @returns {JSX.Element} - The JSX for the navigation bar.
+ */
+
 const Navbar = () => {
+  // useNavigate hook from react-router-dom to navigate between routes
   const navigate = useNavigate()
+   // useLocation hook from react-router-dom to get the current location
   const location = useLocation()
+
+   /**
+   * A function to check if the current location matches a given route.
+   * @param {string} route - The route to check.
+   * @returns {boolean} - True if the current location matches the route, false otherwise.
+   */
 
   const pathMatchRoute = (route) => {
     if(route == location.pathname) {
