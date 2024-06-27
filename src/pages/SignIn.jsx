@@ -5,6 +5,7 @@ import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import ArrowRightIcon from '../assets/svg/keyboardArrowRightIcon.svg?react' 
 import VisibilityIcon from '../assets/svg/visibilityIcon.svg' 
 import chalk from "chalk"
+import { OAuth } from "../components/OAuth"
 
 const SignIn = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -81,6 +82,9 @@ const SignIn = () => {
             </button>
           </div>
         </form>
+
+        <OAuth />
+
         <Link to='/sign-up' className='registerLink'>
           Sign Up Instead
         </Link>
