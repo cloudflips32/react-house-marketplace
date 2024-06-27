@@ -9,6 +9,7 @@ import Profile from './pages/Profile'
 import SignIn from './pages/SignIn'
 import SignUp from './pages/SignUp'
 import PrivateRoute from './components/PrivateRoute'
+import Category from './pages/Category'
 /**
  * The main application component.
  * @returns {JSX.Element} - The JSX element to render the application.
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Explore />} />
           <Route path="/offer" element={<Offers />} />
+          <Route path="/category/:categoryName" element={<Category />} />
           <Route path="/profile" element={<PrivateRoute />}>
             <Route path='/profile' element={<Profile />} />
           </Route>
