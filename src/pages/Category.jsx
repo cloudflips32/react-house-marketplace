@@ -1,10 +1,10 @@
 import {useState, useEffect} from 'react'
 import {useParams} from 'react-router-dom'
-import {collection,getDocs,query,where,orderBy,limit,startAfter} from 'firebase/firestore'
+import {collection,getDocs,query,where,orderBy,limit} from 'firebase/firestore'
 import {db} from '../config/firebase.config'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
-import { list } from 'firebase/storage'
+import ListingItem from '../components/ListingItem'
 
 const Category = () => {
   const [listings,setListings] = useState(null)
@@ -20,7 +20,7 @@ const Category = () => {
         const q = query(
           listingsRef,
           where('type', '==', params.categoryName),
-          orderBy('timestamp','desc'),
+          orderBy('timestamp', 'desc'),
           limit(10)
         )
         const querySnap = await getDocs(q)
@@ -30,13 +30,12 @@ const Category = () => {
         querySnap.forEach((doc) => {
           return listings.push({
             id: doc.id,
-            data: doc.data()
+            data: doc.data(),
           })
         })
 
         setListings(listings)
         setLoading(false)
-        toast.success('Listings Found!')
       } catch (error) {
         toast.error('fetch for listings failed')
       }
@@ -54,20 +53,24 @@ const Category = () => {
         </p>
       </header>
       { 
-        loading ? 
-        <Spinner /> : 
-        listings && listings.length > 0 ? 
+        loading ? ( <Spinner /> ) : 
+        listings && listings.length > 0 ? ( 
         <>
           <main>
             <ul>
               {listings.map((listing) => (
-                <h2 key={listing.id}>{listing.data.name}</h2>
+                <ListingItem 
+                  listing={listing.data} 
+                  id={listing.id} 
+                  key={listing.id}
+                />
               ))}
             </ul>
           </main>
-        </> : 
+        </> 
+        ) : (
         <p>No Listings for {params.categoryName}</p> 
-      }
+      )}
     </div>
   )
 }
