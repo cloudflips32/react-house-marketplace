@@ -2,6 +2,13 @@ import { Link } from "react-router-dom"
 import rentCategoryImage from '../assets/jpg/rentCategoryImage.jpg'
 import sellCategoryImage from '../assets/jpg/sellCategoryImage.jpg'
 
+/**
+ * Explore component is responsible for displaying the categories of properties available for rent and sale.
+ * It uses React Router to navigate to the respective category pages.
+ * 
+ * @returns {JSX.Element} - The JSX element to be rendered.
+ */
+
 const Explore = () => {
   return (
     <div className="explore">
@@ -32,7 +39,6 @@ const Explore = () => {
         </div>
       </main>
     </div>
-
   )
 }
 
