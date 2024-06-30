@@ -2,8 +2,10 @@ import { useState } from 'react'
 import { getAuth, updateProfile } from 'firebase/auth'
 import { updateDoc, doc } from 'firebase/firestore'
 import { db } from '../config/firebase.config'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import ArrowRight from '../assets/svg/keyboardArrowRightIcon.svg'
+import HomeIcon from '../assets/svg/homeIcon.svg'
 import chalk from 'chalk'
 
 const Profile = () => {
@@ -91,6 +93,12 @@ const Profile = () => {
             />
           </form>
         </div>
+
+        <Link to='/create-listing' className='createListing'>
+          <img src={HomeIcon} alt="house-icon" />
+          <p>Sell or Rent your home</p>
+          <img src={ArrowRight} alt="right-arrow" />
+        </Link>
 
       </main>
     </div>
