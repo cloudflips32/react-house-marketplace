@@ -8,4 +8,6 @@
 
 ---
 
-![Explore perspective](offers.png)
+![Explore perspective](explore.png)
+
+06/30/2024- Explore Page, Mobile Perspective
