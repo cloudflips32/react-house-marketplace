@@ -718,6 +718,7 @@ button {
 
 .formButtons {
   display: flex;
+  width: 100%;
 }
 
 .formButton,
@@ -736,6 +737,7 @@ button {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
 }
 .formButtonActive {
   background-color: #00cc66;
@@ -819,3 +821,35 @@ button {
   font-size: 0.8rem;
   opacity: 0.75;
 }
+
+@media(max-width: 400px) {
+  .formGroup,
+  .bedGroup,
+  .parkGroup,
+  .furnGroup,
+  .bathGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+  .formLatLng {
+    align-items: flex-start;
+    width: 100%;
+    margin: auto;
+    justify-content: space-between;
+  }
+
+  .formLabel {
+    margin-bottom: 5px;
+  }
+
+  .formInput,
+  .formInputAddress,
+  .formInputName,
+  .formInputSmall,
+  .formInputFile {
+    width: 100%;
+    margin: auto;
+  }
+}
+
