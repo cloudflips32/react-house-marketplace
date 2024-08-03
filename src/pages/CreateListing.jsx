@@ -3,6 +3,13 @@ import {getAuth,onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from 'firebase/storage'
+// Just finished import, photos
 
 const CreateListing = () => {
 
@@ -84,7 +91,8 @@ const CreateListing = () => {
       geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
       geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
 
-      location = data.status === 'ZERO RESULTS' ? undefined : data.results[0].formatted_address
+      location = data.status === 'ZERO RESULTS' ? 
+      undefined : data.results[0].formatted_address
 
       if(location === undefined || location.includes('undefined')) {
         setLoading(false)
