@@ -1,12 +1,13 @@
 import { useState,useEffect,useRef } from "react"
 import {getAuth,onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
+import {toast} from 'react-toastify'
 import Spinner from '../components/Spinner'
 
 const CreateListing = () => {
 
   
-  const [geolocationEnabled,setGeolocationEnabled] = useState(false)
+  const [geolocationEnabled,setGeolocationEnabled] = useState(true)
   
   const [loading,setLoading] = useState(false)
 
@@ -51,9 +52,52 @@ const CreateListing = () => {
 
   }, [isMounted])
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
+
+    if(discountedPrice >= regularPrice) {
+      setLoading(false)
+
+      toast.error('Discounted price must be less than regular price')
+      return
+    }
+
+    if(images.length > 6) {
+      setLoading(false)
+      toast.error('Upload a maximum of 6 images')
+      return
+    }
+
+    let geolocation = {}
+    let location
+    let geoKey = import.meta.env.VITE_GEO_API_KEY
+    let geoURL = import.meta.env.VITE_GEO_API_URL
+
+    if(geolocationEnabled){
+      const response = await fetch(`${geoURL}?address=${address}&key=${geoKey}`)
+
+      const data = await response.json()
+
+      console.log(data)
+
+      geolocation.lat = data.results[0]?.geometry.location.lat ?? 0
+      geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
+
+      location = data.status === 'ZERO RESULTS' ? undefined : data.results[0].formatted_address
+
+      if(location === undefined || location.includes('undefined')) {
+        setLoading(false)
+        toast.error('Please enter the correct address')
+        return
+      }
+    } else {
+      geolocation.lat = latitude
+      geolocation.lng = longitude
+      location = address
+    }
+    setLoading(false)
+    toast.success('Listing created successfully')
   }
 
   const onMutate = (e) => {
