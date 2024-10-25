@@ -1,19 +1,24 @@
 import { useState,useEffect,useRef } from "react"
 import {getAuth,onAuthStateChanged } from 'firebase/auth'
-import { useNavigate } from 'react-router-dom'
-import {toast} from 'react-toastify'
-import Spinner from '../components/Spinner'
 import {
   getStorage,
   ref,
   uploadBytesResumable,
   getDownloadURL,
 } from 'firebase/storage'
+import { addDoc, collection, serverTimestamp } from "firebase/firestore"
+import { useNavigate } from 'react-router-dom'
+import {toast} from 'react-toastify'
+import {v4 as  uuidv4} from 'uuid'
+
+import Spinner from '../components/Spinner'
+import {db} from  '../config/firebase.config'
+
 // Just finished import, photos
 
 const CreateListing = () => {
 
-  
+  // eslint-disable-next-line no-unused-vars
   const [geolocationEnabled,setGeolocationEnabled] = useState(true)
   
   const [loading,setLoading] = useState(false)
@@ -29,7 +34,7 @@ const CreateListing = () => {
     offer: false,
     regularPrice: 0,
     discountedPrice: 0,
-    images: [],
+    images: {},
     latitude: 0,
     longitude: 0,
   })
@@ -50,17 +55,15 @@ const CreateListing = () => {
         }
       })
     }
-
     return () => {
       isMounted.current = false
     }
-
     //eslint-disable-next-line react-hooks/exhaustive-deps
-
-  }, [isMounted])
+  }, [isMounted]);
 
   const onSubmit = async (e) => {
     e.preventDefault()
+
     setLoading(true)
 
     if(discountedPrice >= regularPrice) {
@@ -92,7 +95,9 @@ const CreateListing = () => {
       geolocation.lng = data.results[0]?.geometry.location.lng ?? 0
 
       location = data.status === 'ZERO RESULTS' ? 
-      undefined : data.results[0].formatted_address
+      undefined : data.results[0]?.formatted_address
+
+      console.log(location)
 
       if(location === undefined || location.includes('undefined')) {
         setLoading(false)
@@ -102,10 +107,75 @@ const CreateListing = () => {
     } else {
       geolocation.lat = latitude
       geolocation.lng = longitude
-      location = address
     }
+    const storeImage = async (image) => {
+      return new Promise(( resolve,reject ) => {
+        const storage = getStorage()
+  
+        const fileName = `${auth.currentUser.uid}-${image.name}-${uuidv4()}`
+  
+        const storageRef = ref(storage, 'images/' + fileName)
+  
+        const uploadTask = uploadBytesResumable(storageRef, image);
+  
+        uploadTask.on(
+          'state_changed',
+          (snapshot) => {
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+            console.log('Upload is ' + progress + '% done')
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused')
+                break
+              case 'running':
+                console.log('Upload is running')
+                break
+              default:
+                break
+            }
+          },
+          (error) => {
+            reject(error)
+          },
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then(
+              (downloadURL) => {
+                resolve(downloadURL)
+            })
+          }
+        )
+      })
+    }
+
+    const imageURLs = await Promise.all(
+      [...images].map((image) => storeImage(image))
+    ).catch(() => {
+      setLoading(false)
+      toast.error('Failed to upload images')
+      return
+    })
+
+    console.log(imageURLs)
+
+    const formDataCopy = {
+      ...formData,
+      imageURLs,
+      geolocation,
+      timestamp: serverTimestamp()
+    }
+
+    formDataCopy.location = address
+    delete formDataCopy.images
+    delete formDataCopy.address
+    !formDataCopy.offer && delete formDataCopy.discountedPrice
+
+    const docRef = await addDoc(collection(db, 'listings'),
+    formDataCopy)
+
     setLoading(false)
-    toast.success('Listing created successfully')
+    toast.success('Listing Saved')
+    navigate(`/category/${formDataCopy.type}/${docRef.id}`)
   }
 
   const onMutate = (e) => {
@@ -133,9 +203,7 @@ const CreateListing = () => {
     }
   }
 
-  if(loading){
-    return <Spinner />
-  }
+  if(loading) {return <Spinner />}
   return (
     <div className="profile">
       <header>
