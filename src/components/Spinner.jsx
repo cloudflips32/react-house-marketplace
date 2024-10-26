@@ -6,19 +6,11 @@
 
 const Spinner = () => {
   return (
-
-    /**
-     * The container for the loading spinner.
-     */
-
-    <div className="loadingSpinnerContainer">
-
-      /**
-       * The actual loading spinner.
-       */
-
-      <div className="loadingSpinner"></div>
-    </div>
+    <>
+      <div className="loadingSpinnerContainer">
+        <div className="loadingSpinner" />
+      </div>
+    </>
   )
 }
 
