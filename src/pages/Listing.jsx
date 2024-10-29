@@ -30,9 +30,9 @@ const Listing = () => {
         fetchListing()
     },[navigate, params.listingId])
 
-    { loading && < Spinner /> }
-
-
+    if(loading) {
+      return <Spinner />
+    }
   return (
     <main>
       { /* SLIDER */}
@@ -81,10 +81,10 @@ const Listing = () => {
         { /* MAP*/ }
 
         {auth.currentUser?.uid !== listing.userRef && (
-          <Link to={`/contact/${listing.userRef}?listingName=${listing.name}&listingLocation=${listing.location}`}className="primaryButton" 
-          >{location.type === 'rent' 
-          ?  'Contact Landlord' 
-          : 'Contact Realtor'}
+          <Link to={`/contact/${listing.userRef}?listingName=${listing.name}`}className="primaryButton" 
+          >{location.type === 'sale' 
+          ?  'Contact Realtor' 
+          : 'Contact Landlord'}
           </Link>
         )}
 
