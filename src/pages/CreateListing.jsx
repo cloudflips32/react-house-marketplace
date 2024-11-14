@@ -24,7 +24,7 @@ const CreateListing = () => {
   const [loading,setLoading] = useState(false)
 
   const [formData,setFormData] = useState({
-    type: 'rent',
+    type: '',
     name: '',
     bedrooms: 1,
     bathrooms: 1,
